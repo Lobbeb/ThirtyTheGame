@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ThirtyThrows</string>
+    <string name="round_text">Round: 1</string>
+    <string name="dice_1_description">Dice showing 1</string>
+    <string name="dice_2_description">Dice showing 2</string>
+    <string name="dice_3_description">Dice showing 3</string>
+    <string name="dice_4_description">Dice showing 4</string>
+    <string name="dice_5_description">Dice showing 5</string>
+    <string name="dice_6_description">Dice showing 6</string>
+    <string name="roll_dice_button_text">Roll Dice</string>
+    <string name="score_round_button_text">Score Round</string>
+    <string name="score_text">Score: 0</string>
+    <string name="total_score">Total Score: %1$d</string>
+    <string name="checkBox_description">Select dice</string>
+
+    <string-array name="score_categories">
+        <item>LOW</item>
+        <item>FOUR</item>
+        <item>FIVE</item>
+        <item>SIX</item>
+        <item>SEVEN</item>
+        <item>EIGHT</item>
+        <item>NINE</item>
+        <item>TEN</item>
+        <item>ELEVEN</item>
+        <item>TWELVE</item>
+    </string-array>
+</resources>
