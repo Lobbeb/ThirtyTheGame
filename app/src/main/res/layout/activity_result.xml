@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Root LinearLayout with vertical orientation and centered gravity -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center">
 
+    <!-- TextView to display the total score -->
     <TextView
         android:id="@+id/totalScoreTextView"
         android:layout_width="wrap_content"
@@ -12,6 +14,7 @@
         android:text="Total Score: 0"
         android:textSize="24sp" />
 
+    <!-- TextView to display the round scores -->
     <TextView
         android:id="@+id/roundScoresTextView"
         android:layout_width="wrap_content"
@@ -20,6 +23,7 @@
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
+    <!-- Button to play the game again -->
     <Button
         android:id="@+id/playAgainButton"
         android:layout_width="wrap_content"

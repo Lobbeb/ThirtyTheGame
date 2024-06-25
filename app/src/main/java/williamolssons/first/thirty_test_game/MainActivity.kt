@@ -11,6 +11,9 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * MainActivity handles the game view and user interactions.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var game: ThirtyGame
@@ -22,6 +25,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var roundTextView: TextView
     private lateinit var categorySpinner: Spinner
 
+    /**
+     * Called when the activity is first created.
+     * Initializes the game and sets up UI elements.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -72,17 +79,27 @@ class MainActivity : AppCompatActivity() {
         updateUI()
     }
 
+    /**
+     * Called to save the current state before the activity is destroyed.
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         game.saveState(outState)
     }
 
+    /**
+     * Rolls the dice that are not held and updates the UI.
+     */
     private fun rollDice() {
         game.rollDice()
         Log.d("MainActivity", "Rolled dice: ${game.dice.map { it.value }}")
         updateUI()
     }
 
+    /**
+     * Scores the current round based on the selected category and dice.
+     * Advances to the next round or ends the game if it's over.
+     */
     private fun scoreRound() {
         val selectedCategory = categorySpinner.selectedItem.toString()
         val category = ScoreCategory.valueOf(selectedCategory)
@@ -114,12 +131,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Toggles the hold status of the dice at the given index.
+     * Updates the UI to reflect the change.
+     */
     private fun toggleHoldDice(index: Int) {
         game.dice[index].isHeld = !game.dice[index].isHeld
         Log.d("MainActivity", "Toggled hold for dice $index: now held = ${game.dice[index].isHeld}")
         updateUI()
     }
 
+    /**
+     * Updates the UI to reflect the current state of the game.
+     */
     private fun updateUI() {
         for (i in diceImageViews.indices) {
             diceImageViews[i].setImageResource(getDiceResource(game.dice[i].value))
@@ -130,6 +154,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "Updated UI: Round ${game.currentRound + 1}, Score ${game.getCurrentScore()}")
     }
 
+    /**
+     * Returns the drawable resource ID for the given dice value.
+     */
     private fun getDiceResource(value: Int): Int {
         return when (value) {
             1 -> R.drawable.white1

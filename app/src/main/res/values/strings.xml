@@ -1,18 +1,30 @@
 <resources>
+    <!-- Application name -->
     <string name="app_name">ThirtyThrows</string>
+
+    <!-- Text for the current round display -->
     <string name="round_text">Round: 1</string>
+
+    <!-- Descriptions for dice images -->
     <string name="dice_1_description">Dice showing 1</string>
     <string name="dice_2_description">Dice showing 2</string>
     <string name="dice_3_description">Dice showing 3</string>
     <string name="dice_4_description">Dice showing 4</string>
     <string name="dice_5_description">Dice showing 5</string>
     <string name="dice_6_description">Dice showing 6</string>
+
+    <!-- Text for buttons -->
     <string name="roll_dice_button_text">Roll Dice</string>
     <string name="score_round_button_text">Score Round</string>
+
+    <!-- Text for score display -->
     <string name="score_text">Score: 0</string>
     <string name="total_score">Total Score: %1$d</string>
+
+    <!-- Description for checkbox to select dice -->
     <string name="checkBox_description">Select dice</string>
 
+    <!-- Array of score categories for the spinner -->
     <string-array name="score_categories">
         <item>LOW</item>
         <item>FOUR</item>

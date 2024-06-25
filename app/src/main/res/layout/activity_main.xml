@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- ScrollView to allow scrolling of the entire layout -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!-- Root LinearLayout with vertical orientation -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- LinearLayout to display the round and score horizontally -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -17,6 +20,7 @@
             android:gravity="center_horizontal"
             android:layout_marginBottom="8dp">
 
+            <!-- TextView to display the current round -->
             <TextView
                 android:id="@+id/roundTextView"
                 android:layout_width="wrap_content"
@@ -24,6 +28,7 @@
                 android:text="@string/round_text"
                 android:layout_marginEnd="16dp" />
 
+            <!-- TextView to display the current score -->
             <TextView
                 android:id="@+id/scoreTextView"
                 android:layout_width="wrap_content"
@@ -31,6 +36,7 @@
                 android:text="@string/score_text" />
         </LinearLayout>
 
+        <!-- GridLayout to display the dice -->
         <GridLayout
             android:id="@+id/diceGrid"
             android:layout_width="match_parent"
@@ -41,18 +47,21 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
 
+            <!-- LinearLayout for the first die with an ImageView and CheckBox -->
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1">
+                <!-- ImageView to display the first die -->
                 <ImageView
                     android:id="@+id/dice1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/dice_1_description"
                     android:src="@drawable/white1" />
+                <!-- CheckBox to hold the first die -->
                 <CheckBox
                     android:id="@+id/checkBox1"
                     android:layout_width="wrap_content"
@@ -60,6 +69,7 @@
                     android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
+            <!-- Repeat LinearLayout for other dice (dice2 to dice6) -->
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
@@ -156,6 +166,7 @@
             </LinearLayout>
         </GridLayout>
 
+        <!-- LinearLayout for spinner and buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,12 +174,14 @@
             android:gravity="center_horizontal"
             android:layout_marginBottom="16dp">
 
+            <!-- Spinner for selecting score category -->
             <Spinner
                 android:id="@+id/categorySpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_gravity="center_horizontal" />
 
+            <!-- Button to roll the dice -->
             <Button
                 android:id="@+id/rollButton"
                 android:layout_width="wrap_content"
@@ -178,6 +191,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_gravity="center_horizontal" />
 
+            <!-- Button to score the round -->
             <Button
                 android:id="@+id/scoreButton"
                 android:layout_width="wrap_content"
