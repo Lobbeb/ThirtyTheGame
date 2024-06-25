@@ -1,5 +1,6 @@
 package williamolssons.first.thirty_test_game
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -144,6 +145,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Updates the UI to reflect the current state of the game.
      */
+    @SuppressLint("SetTextI18n")
     private fun updateUI() {
         for (i in diceImageViews.indices) {
             diceImageViews[i].setImageResource(getDiceResource(game.dice[i].value))

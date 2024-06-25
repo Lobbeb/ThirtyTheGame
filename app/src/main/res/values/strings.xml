@@ -13,6 +13,9 @@
     <string name="dice_5_description">Dice showing 5</string>
     <string name="dice_6_description">Dice showing 6</string>
 
+
+
+
     <!-- Text for buttons -->
     <string name="roll_dice_button_text">Roll Dice</string>
     <string name="score_round_button_text">Score Round</string>
@@ -23,6 +26,10 @@
 
     <!-- Description for checkbox to select dice -->
     <string name="checkBox_description">Select dice</string>
+    <string name="total_score_0">Total Score: 0</string>
+    <string name="round_scores">Round Scores</string>
+    <string name="play_again">Play Again</string>
+
 
     <!-- Array of score categories for the spinner -->
     <string-array name="score_categories">

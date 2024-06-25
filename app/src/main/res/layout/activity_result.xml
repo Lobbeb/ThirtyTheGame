@@ -11,7 +11,7 @@
         android:id="@+id/totalScoreTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Total Score: 0"
+        android:text="@string/total_score_0"
         android:textSize="24sp" />
 
     <!-- TextView to display the round scores -->
@@ -19,7 +19,7 @@
         android:id="@+id/roundScoresTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Round Scores"
+        android:text="@string/round_scores"
         android:textSize="18sp"
         android:layout_marginTop="16dp" />
 
@@ -28,6 +28,6 @@
         android:id="@+id/playAgainButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play Again"
+        android:text="@string/play_again"
         android:layout_marginTop="16dp" />
 </LinearLayout>
