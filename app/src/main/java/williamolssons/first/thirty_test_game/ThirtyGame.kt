@@ -2,33 +2,21 @@ package williamolssons.first.thirty_test_game
 
 import android.os.Bundle
 import android.util.Log
-import kotlin.math.min
+import kotlin.random.Random
 
-/**
- * Class representing the Thirty Game logic.
- * Manages the state of the game, dice, scores, and rounds.
- */
 class ThirtyGame {
 
-    // Array of six dice used in the game.
     val dice: Array<Dice> = Array(6) { Dice() }
-    // List to keep track of scores for each round.
-    private val scores: MutableList<Int> = mutableListOf()
-    // Current round number.
+    private val scores: MutableMap<ScoreCategory, Int> = mutableMapOf()
     var currentRound: Int = 0
         private set
-    // Number of rolls left in the current round.
     private var rollsLeft: Int = 3
 
-    /**
-     * Rolls the dice that are not held.
-     * Decreases the number of rolls left.
-     */
     fun rollDice() {
         if (rollsLeft > 0) {
             for (die in dice) {
                 if (!die.isHeld) {
-                    die.value = (1..6).random()
+                    die.value = Random.nextInt(1, 7)
                 }
             }
             rollsLeft--
@@ -36,76 +24,143 @@ class ThirtyGame {
         Log.d("ThirtyGame", "Dice rolled: ${dice.map { it.value }}")
     }
 
-    /**
-     * Scores the current round based on the selected category and selected dice.
-     * Adds the score to the scores list.
-     * @param selectedCategory The category chosen for scoring.
-     * @param selectedDice The dice selected for scoring.
-     */
     fun scoreRound(selectedCategory: ScoreCategory, selectedDice: List<Dice>) {
+        if (scores.containsKey(selectedCategory)) {
+            throw IllegalArgumentException("Category already used.")
+        }
+
         val roundScore = if (selectedDice.isEmpty()) {
             calculateScore(selectedCategory)
         } else {
-            calculateManualScore(selectedCategory.value, selectedDice)
+            calculateManualScore(selectedCategory, selectedDice)
         }
-        scores.add(roundScore)
+        scores[selectedCategory] = roundScore
         Log.d("ThirtyGame", "Scored $roundScore for category $selectedCategory in round $currentRound")
     }
 
-    // Calculates score for automatic pairing based on selected category.
     private fun calculateScore(selectedCategory: ScoreCategory): Int {
         return when (selectedCategory) {
             ScoreCategory.LOW -> dice.filter { it.value <= 3 }.sumOf { it.value }
-            else -> calculateOptimalScore(selectedCategory.value)
+            else -> calculateOptimalScore(selectedCategory.value, dice.map { it.value })
         }
     }
 
-    // Calculates optimal score for the given target value.
-    private fun calculateOptimalScore(targetValue: Int): Int {
-        val diceCount = dice.groupBy { it.value }.mapValues { it.value.size }.toMutableMap()
+    private fun calculateOptimalScore(targetValue: Int, diceValues: List<Int>): Int {
+        val combinations = findAllUniqueCombinations(diceValues, targetValue)
+        val usedDice = BooleanArray(diceValues.size)
         var score = 0
 
-        while (true) {
-            var pairSum = 0
-            for ((value, count) in diceCount) {
-                if (count > 0 && (diceCount[targetValue - value] ?: 0) > 0) {
-                    val pairs = min(count, diceCount[targetValue - value] ?: 0)
-                    pairSum += pairs * targetValue
-                    diceCount[value] = count - pairs
-                    diceCount[targetValue - value] = (diceCount[targetValue - value] ?: 0) - pairs
-                }
+        combinations.forEach { combination ->
+            if (isCombinationValid(combination, diceValues, usedDice)) {
+                score += targetValue
+                markUsedDice(combination, diceValues, usedDice)
             }
-            if (pairSum == 0) break
-            score += pairSum
         }
+
+        Log.d("ThirtyGame", "Final score: $score, used dice: ${usedDice.toList()}")
         return score
     }
 
-    // Calculates manual score based on the selected dice.
-    private fun calculateManualScore(targetValue: Int, selectedDice: List<Dice>): Int {
-        val selectedSum = selectedDice.sumOf { it.value }
-        if (selectedSum != targetValue) {
-            throw IllegalArgumentException("Selected dice do not sum up to the target value.")
+    private fun isCombinationValid(combination: List<Int>, diceValues: List<Int>, usedDice: BooleanArray): Boolean {
+        val diceCount = mutableMapOf<Int, Int>()
+        for (value in combination) {
+            diceCount[value] = diceCount.getOrDefault(value, 0) + 1
         }
-        return selectedSum
+        for ((value, count) in diceCount) {
+            val availableDice = diceValues.indices.count { diceValues[it] == value && !usedDice[it] }
+            if (count > availableDice) {
+                return false
+            }
+        }
+        return true
     }
 
-    // Gets the current score of the game.
+    private fun markUsedDice(combination: List<Int>, diceValues: List<Int>, usedDice: BooleanArray) {
+        val diceCount = mutableMapOf<Int, Int>()
+        for (value in combination) {
+            diceCount[value] = diceCount.getOrDefault(value, 0) + 1
+        }
+        for ((index, value) in diceValues.withIndex()) {
+            if (diceCount.containsKey(value) && diceCount[value]!! > 0 && !usedDice[index]) {
+                usedDice[index] = true
+                diceCount[value] = diceCount[value]!! - 1
+            }
+        }
+    }
+
+    private fun calculateManualScore(selectedCategory: ScoreCategory, selectedDice: List<Dice>): Int {
+        return when (selectedCategory) {
+            ScoreCategory.LOW -> {
+                val selectedValues = selectedDice.map { it.value }
+                Log.d("ThirtyGame", "Selected values for LOW: $selectedValues")
+                if (selectedValues.any { it > 3 }) {
+                    throw IllegalArgumentException("Selected dice for 'Low' category must have values of 3 or lower.")
+                }
+                selectedValues.sum()
+            }
+            else -> {
+                val selectedValues = selectedDice.map { it.value }
+                Log.d("ThirtyGame", "Selected values for ${selectedCategory.name}: $selectedValues")
+                val combinations = findAllUniqueCombinations(selectedValues, selectedCategory.value)
+                Log.d("ThirtyGame", "Found combinations: $combinations")
+                var score = 0
+                val usedDice = BooleanArray(selectedValues.size)
+
+                combinations.forEach { combination ->
+                    if (isCombinationValid(combination, selectedValues, usedDice)) {
+                        score += selectedCategory.value
+                        markUsedDice(combination, selectedValues, usedDice)
+                    }
+                }
+
+                if (score == 0) {
+                    throw IllegalArgumentException("Selected dice do not sum up to the target value.")
+                }
+                score
+            }
+        }
+    }
+
+    private fun findAllUniqueCombinations(diceValues: List<Int>, targetValue: Int): List<List<Int>> {
+        val result = mutableListOf<List<Int>>()
+        findUniqueCombinationsHelper(diceValues.sortedDescending(), targetValue, 0, mutableListOf(), result)
+        return result
+    }
+
+    private fun findUniqueCombinationsHelper(
+        diceValues: List<Int>,
+        targetValue: Int,
+        start: Int,
+        currentCombination: MutableList<Int>,
+        result: MutableList<List<Int>>
+    ) {
+        if (targetValue == 0) {
+            result.add(ArrayList(currentCombination))
+            return
+        }
+        if (targetValue < 0) {
+            return
+        }
+
+        for (i in start until diceValues.size) {
+            currentCombination.add(diceValues[i])
+            findUniqueCombinationsHelper(diceValues, targetValue - diceValues[i], i + 1, currentCombination, result)
+            currentCombination.removeAt(currentCombination.size - 1)
+        }
+    }
+
     fun getCurrentScore(): Int {
-        return scores.sum()
+        return scores.values.sum()
     }
 
-    // Gets the total score of the game.
     fun getTotalScore(): Int {
-        return scores.sum()
+        return scores.values.sum()
     }
 
-    // Gets the scores for each round.
-    fun getRoundScores(): List<Int> {
-        return scores
+    fun getRoundScores(): List<Pair<String, Int>> {
+        return scores.map { it.key.name to it.value }
     }
 
-    // Moves to the next round, resets rolls and dice hold status.
     fun nextRound() {
         if (currentRound < 9) {
             currentRound++
@@ -117,41 +172,48 @@ class ThirtyGame {
         }
     }
 
-    // Checks if the game is over.
     fun isGameOver(): Boolean {
         val gameOver = currentRound >= 9
         Log.d("ThirtyGame", "Is game over: $gameOver")
         return gameOver
     }
 
-    // Saves the current state of the game to a Bundle.
     fun saveState(outState: Bundle) {
         outState.putInt("currentRound", currentRound)
         outState.putIntArray("diceValues", dice.map { it.value }.toIntArray())
         outState.putBooleanArray("diceHolds", dice.map { it.isHeld }.toBooleanArray())
-        outState.putIntegerArrayList("scores", ArrayList(scores))
         outState.putInt("rollsLeft", rollsLeft)
+
+        val scoresBundle = Bundle()
+        for ((key, value) in scores) {
+            scoresBundle.putInt(key.name, value)
+        }
+        outState.putBundle("scoresBundle", scoresBundle)
     }
 
-    // Restores the state of the game from a Bundle.
     fun restoreState(savedInstanceState: Bundle) {
         currentRound = savedInstanceState.getInt("currentRound", 0)
         val diceValues = savedInstanceState.getIntArray("diceValues") ?: IntArray(6) { 1 }
         val diceHolds = savedInstanceState.getBooleanArray("diceHolds") ?: BooleanArray(6) { false }
+        val scoresBundle = savedInstanceState.getBundle("scoresBundle")
+
+        scores.clear()
+        scoresBundle?.keySet()?.forEach { key ->
+            val scoreCategory = ScoreCategory.valueOf(key)
+            val score = scoresBundle.getInt(key)
+            scores[scoreCategory] = score
+        }
+
         for (i in dice.indices) {
             dice[i].value = diceValues[i]
             dice[i].isHeld = diceHolds[i]
         }
-        scores.clear()
-        scores.addAll(savedInstanceState.getIntegerArrayList("scores") ?: emptyList())
         rollsLeft = savedInstanceState.getInt("rollsLeft", 3)
     }
 }
 
-/**
- * Enum class representing the different score categories in the game.
- * @param value The value associated with the category.
- */
 enum class ScoreCategory(val value: Int) {
     LOW(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10), ELEVEN(11), TWELVE(12)
 }
+
+

@@ -47,26 +47,19 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
 
-            <!-- LinearLayout for the first die with an ImageView and CheckBox -->
+            <!-- LinearLayout for the first die with an ImageView -->
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1">
-                <!-- ImageView to display the first die -->
                 <ImageView
                     android:id="@+id/dice1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/dice_1_description"
                     android:src="@drawable/white1" />
-                <!-- CheckBox to hold the first die -->
-                <CheckBox
-                    android:id="@+id/checkBox1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
             <!-- Repeat LinearLayout for other dice (dice2 to dice6) -->
@@ -82,11 +75,6 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/dice_2_description"
                     android:src="@drawable/white2" />
-                <CheckBox
-                    android:id="@+id/checkBox2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,11 +89,6 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/dice_3_description"
                     android:src="@drawable/white3" />
-                <CheckBox
-                    android:id="@+id/checkBox3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
             <LinearLayout
@@ -120,11 +103,6 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/dice_4_description"
                     android:src="@drawable/white4" />
-                <CheckBox
-                    android:id="@+id/checkBox4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
             <LinearLayout
@@ -139,11 +117,6 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/dice_5_description"
                     android:src="@drawable/white5" />
-                <CheckBox
-                    android:id="@+id/checkBox5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
 
             <LinearLayout
@@ -158,11 +131,6 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/dice_6_description"
                     android:src="@drawable/white6" />
-                <CheckBox
-                    android:id="@+id/checkBox6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal" />
             </LinearLayout>
         </GridLayout>
 

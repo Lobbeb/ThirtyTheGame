@@ -6,34 +6,21 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-/**
- * ResultActivity displays the total score and round scores at the end of the game.
- */
 class ResultActivity : AppCompatActivity() {
 
-    /**
-     * Called when the activity is first created.
-     * Initializes the UI elements and displays the scores.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_result)
 
-        // Retrieve total score and round scores from the intent
         val totalScore = intent.getIntExtra("TOTAL_SCORE", 0)
-        val roundScores = intent.getIntArrayExtra("ROUND_SCORES") ?: intArrayOf()
+        val roundScores = intent.getStringArrayListExtra("ROUND_SCORES") ?: arrayListOf()
 
-        // Display total score
         val totalScoreTextView: TextView = findViewById(R.id.totalScoreTextView)
         totalScoreTextView.text = getString(R.string.total_score, totalScore)
 
-        // Display scores for each round
         val roundScoresTextView: TextView = findViewById(R.id.roundScoresTextView)
-        roundScoresTextView.text = roundScores.withIndex().joinToString(separator = "\n") { (index, score) ->
-            "Round ${index + 1}: $score"
-        }
+        roundScoresTextView.text = roundScores.joinToString(separator = "\n")
 
-        // Set up play again button to start a new game
         val playAgainButton: Button = findViewById(R.id.playAgainButton)
         playAgainButton.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
