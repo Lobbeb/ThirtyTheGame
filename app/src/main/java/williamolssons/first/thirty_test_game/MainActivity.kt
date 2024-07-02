@@ -11,6 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * MainActivity handles the user interface and interaction for the Thirty game.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var game: ThirtyGame
@@ -22,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var categorySpinner: Spinner
     private val usedCategories = mutableSetOf<ScoreCategory>()
 
+    /**
+     * Called when the activity is first created. Initializes the game and UI components.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -29,19 +35,22 @@ class MainActivity : AppCompatActivity() {
         initializeGame()
         initializeUI()
         setupListeners()
-
-        if (savedInstanceState != null) {
-            game.restoreState(savedInstanceState)
-        }
+        restoreGameState(savedInstanceState)
 
         updateUI()
         rollDice()
     }
 
+    /**
+     * Initializes the game logic.
+     */
     private fun initializeGame() {
         game = ThirtyGame()
     }
 
+    /**
+     * Initializes the UI components.
+     */
     private fun initializeUI() {
         diceImageViews = listOf(
             findViewById(R.id.dice1),
@@ -60,10 +69,16 @@ class MainActivity : AppCompatActivity() {
         setupCategorySpinner()
     }
 
+    /**
+     * Sets up the category spinner.
+     */
     private fun setupCategorySpinner() {
         updateCategorySpinner()
     }
 
+    /**
+     * Updates the category spinner with available categories.
+     */
     private fun updateCategorySpinner() {
         val categories = ScoreCategory.values().map { it.name }
         val adapter = CustomAdapter(this, android.R.layout.simple_spinner_item, categories, usedCategories.map { it.name }.toSet())
@@ -71,6 +86,9 @@ class MainActivity : AppCompatActivity() {
         categorySpinner.adapter = adapter
     }
 
+    /**
+     * Sets up the event listeners for UI components.
+     */
     private fun setupListeners() {
         rollButton.setOnClickListener { rollDice() }
         scoreButton.setOnClickListener { scoreRound() }
@@ -79,17 +97,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Saves the game state when the activity is destroyed.
+     */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         game.saveState(outState)
     }
 
+    /**
+     * Rolls the dice and updates the UI.
+     */
     private fun rollDice() {
         game.rollDice()
         Log.d("MainActivity", "Rolled dice: ${game.dice.map { it.value }}")
         updateUI()
     }
 
+    /**
+     * Restores the game state if it was previously saved.
+     */
+    private fun restoreGameState(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            game.restoreState(savedInstanceState)
+        }
+    }
+
+    /**
+     * Scores the current round based on the selected category and dice.
+     */
     private fun scoreRound() {
         val selectedCategory = categorySpinner.selectedItem.toString()
         val category = ScoreCategory.valueOf(selectedCategory)
@@ -128,6 +164,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Selects the next available category in the spinner.
+     */
     private fun selectNextAvailableCategory() {
         val categories = ScoreCategory.values().map { it.name }
         val nextAvailableCategory = categories.firstOrNull { !usedCategories.contains(ScoreCategory.valueOf(it)) }
@@ -136,12 +175,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Toggles the hold state of a die.
+     */
     private fun toggleHoldDice(index: Int) {
         game.dice[index].isHeld = !game.dice[index].isHeld
         Log.d("MainActivity", "Toggled hold for dice $index: now held = ${game.dice[index].isHeld}")
         updateUI()
     }
 
+    /**
+     * Updates the UI to reflect the current game state.
+     */
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
         for (i in diceImageViews.indices) {
@@ -153,6 +198,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("MainActivity", "Updated UI: Round ${game.currentRound + 1}, Score ${game.getCurrentScore()}")
     }
 
+    /**
+     * Returns the drawable resource ID for a given dice value.
+     */
     private fun getDiceResource(value: Int): Int {
         return when (value) {
             1 -> R.drawable.white1
